@@ -1,16 +1,9 @@
-FROM ubuntu:16.04
+FROM python:3.6.6
 
-LABEL "MAINTAINER" Damir Kadyrov <damirikadyrov@gmail.com>
+RUN pip install --no-cache-dir gunicorn
 
-RUN apt-get update
-RUN apt-get -y install nginx
+WORKDIR /app
 
-ADD ./public /home/box/web/public
+EXPOSE 8080
 
-COPY ./etc/nginx.conf /etc/nginx/nginx.conf
-
-EXPOSE 80
-
-WORKDIR /home/box/
-
-ENTRYPOINT ["nginx", "-g", "daemon off;"]
+CMD ["gunicorn", "-w 3", "-b :8080", "myapp:app"]
